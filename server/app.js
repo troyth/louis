@@ -1,0 +1,83 @@
+
+/**
+ * Module dependencies.
+ */
+
+var express = require('express')
+  , routes = require('./routes')
+  , user = require('./routes/user')
+  , http = require('http')
+  , path = require('path');
+
+var app = express();
+
+// all environments
+app.set('port', process.env.PORT || 3000);
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+app.use(express.cookieParser('your secret here'));
+app.use(express.session());
+app.use(app.router);
+app.use(require('less-middleware')({ src: __dirname + '/public' }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+// development only
+if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
+}
+
+app.get('/', routes.index);
+app.get('/users', user.list);
+
+var server = http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});
+
+
+// Load requirements
+var io = require('socket.io');
+
+io = io.listen(server);
+
+//list of deployed machines by name
+var MACHINES = [
+  "gsapp_1"
+];
+
+//reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines
+var FREQ = 10000;
+
+// Add a connect listener
+io.sockets.on('connection', function(socket) { 
+
+    console.log('Client connected.');
+
+    socket.on('config', function(config) {
+        console.log('config:');
+        console.dir(config);
+
+        //check if machine is 
+        if(typeof config.name == 'string' && MACHINES.indexOf(config.name) > -1){
+          console.log('about to confirm');
+          socket.emit('confirm', {"id": "1111111", "freq": FREQ});
+
+          socket.on('report', function(data) {
+            console.log('reporting!');
+            console.dir(data);
+            console.dir(data.imports[0]);
+          });
+
+        }else{
+          console.log('confirm error');
+        }
+    });
+
+    // Disconnect listener
+    socket.on('disconnect', function() {
+        console.log('Client disconnected.');
+    });
+});
