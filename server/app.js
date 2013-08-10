@@ -39,6 +39,7 @@ var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
+var IMAGE_FILEPATH = __dirname + '/public/images/';
 
 // Load requirements
 var io = require('socket.io');
@@ -88,7 +89,7 @@ io.sockets.on('connection', function(socket) {
 
       console.log('received file from Delivery.js');
 
-      fs.writeFile(file.name,file.buffer, function(err){
+      fs.writeFile( IMAGE_FILEPATH+file.name, file.buffer, function(err){
         if(err){
           console.log('File could not be saved.');
         }else{

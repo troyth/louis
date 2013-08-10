@@ -14,3 +14,5 @@ results
 npm-debug.log
 
 server/node_modules/*
+
+server/.DS_Store
