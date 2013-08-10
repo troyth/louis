@@ -69,6 +69,8 @@ io.sockets.on('connection', function(socket) {
             console.log('reporting!');
             console.dir(data);
             console.dir(data.imports[0]);
+            console.dir(data.imports[1]);
+
           });
 
         }else{
