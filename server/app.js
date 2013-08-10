@@ -72,8 +72,10 @@ io.sockets.on('connection', function(socket) {
             console.log('reporting!');
             console.log('data:');
             console.dir(data);
-            console.log('\ndata.imports:');
-            console.dir(data.imports);
+            console.log('\ndata.imports.photoresistor:');
+            console.dir(data.imports.photoresistor);
+            console.log('\ndata.imports.roomcam:');
+            console.dir(data.imports.roomcam);
             console.log('\n');
           });
 
