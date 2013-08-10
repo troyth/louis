@@ -52,7 +52,7 @@ var MACHINES = [
 ];
 
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines
-var FREQ = 10000;
+var FREQ = 5000;
 
 // Add a connect listener
 io.sockets.on('connection', function(socket) { 
