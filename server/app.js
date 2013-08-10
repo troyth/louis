@@ -7,7 +7,9 @@ var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
   , http = require('http')
-  , path = require('path');
+  , path = require('path')
+  , dl  = require('delivery')
+  fs  = require('fs');
 
 var app = express();
 
@@ -76,6 +78,23 @@ io.sockets.on('connection', function(socket) {
         }else{
           console.log('confirm error');
         }
+    });
+
+    //set up file transfer listener through Delivery.js
+    console.log("\n\n\nINITIALIZE DELIVERY")
+    var delivery = dl.listen(socket);
+
+    delivery.on('receive.success',function(file){
+
+      console.log('received file from Delivery.js');
+
+      fs.writeFile(file.name,file.buffer, function(err){
+        if(err){
+          console.log('File could not be saved.');
+        }else{
+          console.log('File saved.');
+        };
+      });
     });
 
     // Disconnect listener
