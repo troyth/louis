@@ -70,10 +70,28 @@ io.sockets.on('connection', function(socket) {
 
           socket.on('report', function(data) {
             console.log('reporting!');
+            console.log('data:');
             console.dir(data);
-            console.dir(data.imports[0]);
-            console.dir(data.imports[1]);
+            console.log('\ndata.imports:');
+            console.dir(data.imports);
+            console.log('\n');
+          });
 
+          //set up file transfer listener through Delivery.js
+          console.log("\n\n\nINITIALIZE DELIVERY")
+          var delivery = dl.listen(socket);
+
+          delivery.on('receive.success',function(file){
+
+            console.log('received file from Delivery.js');
+
+            fs.writeFile( IMAGE_FILEPATH+file.name, file.buffer, function(err){
+              if(err){
+                console.log('File could not be saved.');
+              }else{
+                console.log('File saved.');
+              };
+            });
           });
 
         }else{
@@ -81,22 +99,7 @@ io.sockets.on('connection', function(socket) {
         }
     });
 
-    //set up file transfer listener through Delivery.js
-    console.log("\n\n\nINITIALIZE DELIVERY")
-    var delivery = dl.listen(socket);
-
-    delivery.on('receive.success',function(file){
-
-      console.log('received file from Delivery.js');
-
-      fs.writeFile( IMAGE_FILEPATH+file.name, file.buffer, function(err){
-        if(err){
-          console.log('File could not be saved.');
-        }else{
-          console.log('File saved.');
-        };
-      });
-    });
+        
 
     // Disconnect listener
     socket.on('disconnect', function() {
