@@ -77,6 +77,7 @@ io.sockets.on('connection', function(socket) {
             console.log('\n');
           });
 
+          /*
           //set up file transfer listener through Delivery.js
           console.log("\n\n\nINITIALIZE DELIVERY")
           var delivery = dl.listen(socket);
@@ -93,6 +94,7 @@ io.sockets.on('connection', function(socket) {
               };
             });
           });
+*/
 
         }else{
           console.log('confirm error');
