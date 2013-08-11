@@ -78,9 +78,9 @@ io.sockets.on('connection', function(socket) {
             console.log('confirming handshake with machine ' + config_name );
 
             var machine_id = machine.exists(config_name);
-
+            console.log('machine_id: '+ machine_id);
             //machine is already in database
-            if(typeof machine_id !== "undefined"){
+            if(machine_id){
               //check password
 
               //machine exists, send back _id
@@ -94,7 +94,7 @@ io.sockets.on('connection', function(socket) {
               if(new_machine){
                 console.log('new machine:');
                 console.dir(new_machine);
-              
+
                 socket.emit('confirm', {"id": new_machine.id, "freq": FREQ});
               }else{
                 console.log('error creating new machine');
