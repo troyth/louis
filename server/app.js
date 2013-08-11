@@ -9,7 +9,7 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , dl  = require('delivery')
-  fs  = require('fs');
+  , fs  = require('fs');
 
 var app = express();
 
@@ -35,21 +35,26 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 
+
+//create server
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-var IMAGE_FILEPATH = __dirname + '/public/images/';
 
-// Load requirements
+//set up socket.io to listen to server
 var io = require('socket.io');
-
 io = io.listen(server);
 
 //list of deployed machines by name
-var MACHINES = [
-  "gsapp_1"
-];
+var MACHINES = {
+  "gsapp_1" : {
+    "id": "0000001"
+  }
+};
+
+//path to store image files
+var IMAGE_FILEPATH = __dirname + '/public/images/';
 
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines
 var FREQ = 5000;
@@ -66,7 +71,9 @@ io.sockets.on('connection', function(socket) {
         //check if machine is 
         if(typeof config.name == 'string' && MACHINES.indexOf(config.name) > -1){
           console.log('about to confirm');
-          socket.emit('confirm', {"id": "1111111", "freq": FREQ});
+          socket.emit('confirm', {"id": MACHINES[config.name].id, "freq": FREQ});
+
+          console.log("YESS!!!! "+ MACHINES[config.name].id);
 
           socket.on('report', function(data) {
             console.log('receiving report from: '+ data.id + ' with '+ data.imports.length + ' imports');
