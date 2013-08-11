@@ -90,10 +90,17 @@ io.sockets.on('connection', function(socket) {
             //machine is not yet in database
             else{
               var new_machine = machine.create(config_name);
-              console.log('new machine:');
-              console.dir(new_machine);
 
-              socket.emit('confirm', {"id": new_machine.id, "freq": FREQ});
+              if(new_machine){
+                console.log('new machine:');
+                console.dir(new_machine);
+              
+                socket.emit('confirm', {"id": new_machine.id, "freq": FREQ});
+              }else{
+                console.log('error creating new machine');
+              }
+
+              
             }
 
 
