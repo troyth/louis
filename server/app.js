@@ -71,7 +71,7 @@ io.sockets.on('connection', function(socket) {
         //check if machine is 
         if(typeof config.name == 'string' && MACHINES.indexOf(config.name) > -1){
           console.log('about to confirm');
-          console.log("YESS!!!! with config.name: "+ config.name ' equals id: ' + MACHINES[config.name].id);
+          console.log("YESS!!!! with config.name: "+ config.name + ' equals id: ' + MACHINES[config.name].id);
           socket.emit('confirm', {"id": MACHINES[config.name].id, "freq": FREQ});
 
           console.log("YESS!!!! "+ MACHINES[config.name].id);
