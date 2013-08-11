@@ -10,7 +10,7 @@ var express = require('express')
   , path = require('path')
   , dl  = require('delivery')
   , fs  = require('fs')
-  , machines = require('./models/machine');
+  , machine = require('./models/machine');
 
 var app = express();
 
@@ -77,7 +77,7 @@ io.sockets.on('connection', function(socket) {
           if(typeof config.name == 'string'){
             console.log('confirming handshake with machine ' + config_name );
 
-            var machine_id = machines.exists(config_name);
+            var machine_id = machine.exists(config_name);
 
             //machine is already in database
             if(typeof machine_id !== "undefined"){
@@ -89,11 +89,11 @@ io.sockets.on('connection', function(socket) {
             }
             //machine is not yet in database
             else{
-              var machine = machines.create(config_name);
+              var new_machine = machine.create(config_name);
               console.log('new machine:');
-              console.dir(machine);
+              console.dir(new_machine);
 
-              socket.emit('confirm', {"id": machine.id, "freq": FREQ});
+              socket.emit('confirm', {"id": new_machine.id, "freq": FREQ});
             }
 
 
