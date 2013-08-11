@@ -69,14 +69,7 @@ io.sockets.on('connection', function(socket) {
           socket.emit('confirm', {"id": "1111111", "freq": FREQ});
 
           socket.on('report', function(data) {
-            console.log('reporting!');
-            console.log('data:');
-            console.dir(data);
-            console.log('\ndata.imports.photoresistor:');
-            console.dir(data.imports.photoresistor);
-            console.log('\ndata.imports.roomcam:');
-            console.dir(data.imports.roomcam);
-            console.log('\n');
+            console.log('receiving report from: '+ data.id + ' with '+ data.imports.length + ' imports');
           });
 
           
