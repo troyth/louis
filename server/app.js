@@ -9,7 +9,8 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , dl  = require('delivery')
-  , fs  = require('fs');
+  , fs  = require('fs')
+  , machines = require('./routes/machine');
 
 var app = express();
 
@@ -69,36 +70,61 @@ io.sockets.on('connection', function(socket) {
         console.log('configuration sent:');
         console.dir(config);
 
-        //check if machine is 
-        if(typeof config.name == 'string' && typeof MACHINES[config.name] !== "undefined"){
-          console.log('confirming handshake with id: ' + MACHINES[config.name].id );
-          socket.emit('confirm', {"id": MACHINES[config.name].id, "freq": FREQ});
+        (function() {
+          var config_name = config.name;
 
-          socket.on('report', function(data) {
-            console.log('receiving report from: '+ data.id );
-          });
+          //check if machine is 
+          if(typeof config.name == 'string'){
+            console.log('confirming handshake with machine ' + config_name );
 
-          
-          //set up file transfer listener through Delivery.js
-          console.log("\n\n\nINITIALIZE DELIVERY")
-          var delivery = dl.listen(socket);
+            var machine_id = machines.exists(config_name);
 
-          delivery.on('receive.success',function(file){
+            //machine is already in database
+            if(typeof machine_id !== "undefined"){
+              //check password
 
-            console.log('received file from Delivery.js');
+              //machine exists, send back _id
+              console.log('existing machine with _id:' + machine_id);
+              socket.emit('confirm', {"id": machine_id, "freq": FREQ});
+            }
+            //machine is not yet in database
+            else{
+              var machine = machines.create(config_name);
+              console.log('new machine:');
+              console.dir(machine);
 
-            fs.writeFile( IMAGE_FILEPATH+file.name, file.buffer, function(err){
-              if(err){
-                console.log('File could not be saved.');
-              }else{
-                console.log('File saved.');
-              };
+              socket.emit('confirm', {"id": machine.id, "freq": FREQ});
+            }
+
+
+            
+
+            socket.on('report', function(data) {
+              console.log('receiving report from: '+ data.id );
             });
-          });
 
-        }else{
-          console.log('confirm error');
-        }
+            
+            //set up file transfer listener through Delivery.js
+            console.log("\n\n\nINITIALIZE DELIVERY")
+            var delivery = dl.listen(socket);
+
+            delivery.on('receive.success',function(file){
+
+              console.log('received file from Delivery.js');
+
+              fs.writeFile( IMAGE_FILEPATH+file.name, file.buffer, function(err){
+                if(err){
+                  console.log('File could not be saved.');
+                }else{
+                  console.log('File saved.');
+                };
+              });
+            });
+
+          }else{
+            console.log('confirm error');
+          }
+        })();//end anonymous function
     });
 
         
