@@ -65,19 +65,17 @@ io.sockets.on('connection', function(socket) {
     console.log('Client connected.');
 
     socket.on('config', function(config) {
-        console.log('config:');
+        console.log('\nINITIALIZING HANDSHAKE REQUEST');
+        console.log('configuration sent:');
         console.dir(config);
 
         //check if machine is 
         if(typeof config.name == 'string' && typeof MACHINES[config.name] !== "undefined"){
-          console.log('about to confirm');
-          console.log("YESS!!!! with config.name: "+ config.name + ' equals id: ' + MACHINES[config.name].id);
+          console.log('confirming handshake with id: ' + MACHINES[config.name].id );
           socket.emit('confirm', {"id": MACHINES[config.name].id, "freq": FREQ});
 
-          console.log("YESS!!!! "+ MACHINES[config.name].id);
-
           socket.on('report', function(data) {
-            console.log('receiving report from: '+ data.id + ' with '+ data.imports.length + ' imports');
+            console.log('receiving report from: '+ data.id );
           });
 
           
