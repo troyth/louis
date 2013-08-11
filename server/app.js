@@ -10,7 +10,7 @@ var express = require('express')
   , path = require('path')
   , dl  = require('delivery')
   , fs  = require('fs')
-  , machines = require('./routes/machine');
+  , machines = require('./models/machine');
 
 var app = express();
 

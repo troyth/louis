@@ -1,4 +1,4 @@
-var Machine = require(__dirname + '../models/models').Machine;
+var Machine = require(__dirname + '/models').Machine;
 var generatePassword = require('password-generator');
 
 exports.create = function(name){
