@@ -106,7 +106,7 @@ exports.initialize = function( name, socket ){
                             initDelivery( mach.id, socket );
 
                             //send confirmation to machine with _id and new password
-                            socket.emit('confirm.new', {"id": _id, "freq": FREQ, "password": pw});
+                            socket.emit('confirm', {"id": _id, "freq": FREQ, "password": pw});
                         }
                     });
 
@@ -119,7 +119,7 @@ exports.initialize = function( name, socket ){
                 initDelivery( machine.id, socket );
 
                 //send confirmation to machine with _id
-                socket.emit('confirm.existing', {"id": machine.id, "freq": FREQ});
+                socket.emit('confirm', {"id": machine.id, "freq": FREQ});
             }
         });
 
