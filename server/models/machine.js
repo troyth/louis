@@ -119,7 +119,7 @@ exports.initialize = function( name, socket ){
                 initDelivery( machine.id, socket );
 
                 //send confirmation to machine with _id
-                socket.emit('confirm.existing', {"id": _id, "freq": FREQ});
+                socket.emit('confirm.existing', {"id": machine.id, "freq": FREQ});
             }
         });
 
