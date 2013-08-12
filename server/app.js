@@ -8,7 +8,6 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
-  , fs  = require('fs')
   , machine = require('./models/machine');
 
 var app = express();

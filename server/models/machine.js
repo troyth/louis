@@ -1,6 +1,7 @@
 var Machine = require(__dirname + '/models').Machine
     , generatePassword = require('password-generator')
-    , dl  = require('delivery');
+    , dl = require('delivery')
+    , fs = require('fs');
 
 
 
