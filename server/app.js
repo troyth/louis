@@ -8,7 +8,6 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
-  , dl  = require('delivery')
   , fs  = require('fs')
   , machine = require('./models/machine');
 
@@ -47,18 +46,6 @@ var server = http.createServer(app).listen(app.get('port'), function(){
 var io = require('socket.io');
 io = io.listen(server);
 
-//list of deployed machines by name
-var MACHINES = {
-  "gsapp_1" : {
-    "id": "0000001"
-  }
-};
-
-//path to store image files
-var IMAGE_FILEPATH = __dirname + '/public/images/';
-
-//reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines
-var FREQ = 5000;
 
 // Add a connect listener
 io.sockets.on('connection', function(socket) { 
@@ -70,68 +57,16 @@ io.sockets.on('connection', function(socket) {
         console.log('configuration sent:');
         console.dir(config);
 
-        (function() {
-          var config_name = config.name;
+        //check if machine is 
+        if(typeof config.name == 'string'){
+          console.log('confirming handshake with machine ' + config.name );
 
-          //check if machine is 
-          if(typeof config.name == 'string'){
-            console.log('confirming handshake with machine ' + config_name );
+          //initialize machine
+          machine.initialize( config.name, socket );
 
-            var machine_id = machine.exists(config_name);
-            console.log('machine_id: '+ machine_id);
-            //machine is already in database
-            if(machine_id){
-              //check password
-
-              //machine exists, send back _id
-              console.log('existing machine with _id:' + machine_id);
-              socket.emit('confirm', {"id": machine_id, "freq": FREQ});
-            }
-            //machine is not yet in database
-            else{
-              var new_machine = machine.create(config_name);
-
-              if(new_machine){
-                console.log('new machine:');
-                console.dir(new_machine);
-
-                socket.emit('confirm', {"id": new_machine.id, "freq": FREQ});
-              }else{
-                console.log('error creating new machine');
-              }
-
-              
-            }
-
-
-            
-
-            socket.on('report', function(data) {
-              console.log('receiving report from: '+ data.id );
-            });
-
-            
-            //set up file transfer listener through Delivery.js
-            console.log("\n\n\nINITIALIZE DELIVERY")
-            var delivery = dl.listen(socket);
-
-            delivery.on('receive.success',function(file){
-
-              console.log('received file from Delivery.js');
-
-              fs.writeFile( IMAGE_FILEPATH+file.name, file.buffer, function(err){
-                if(err){
-                  console.log('File could not be saved.');
-                }else{
-                  console.log('File saved.');
-                };
-              });
-            });
-
-          }else{
-            console.log('confirm error');
-          }
-        })();//end anonymous function
+        }else{
+          console.log('confirm error');
+        }
     });
 
         
