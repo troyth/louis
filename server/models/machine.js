@@ -6,7 +6,7 @@ var Machine = require(__dirname + '/models').Machine
 
 
 //path to store image files
-var IMAGE_FILEPATH = __dirname + '/public/images/';
+var IMAGE_FILEPATH = __dirname + '/../public/images/';
 
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines
 var FREQ = 5000;
