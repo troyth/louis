@@ -26,7 +26,7 @@ function parseFileName( filename, filepath ){
     file.name = filename;
     file.path = IMAGE_FILEPATH;
 
-    file.machine_name = file_array[FILE_PATTERN.machine_name];
+    file.import_name = file_array[FILE_PATTERN.import_name];
     file.type = file_array[FILE_PATTERN.type];
     file.timestamp = file_array[FILE_PATTERN.timestamp];
     file.offset = file_array[FILE_PATTERN.offset];
@@ -60,8 +60,19 @@ function initDelivery( _id, socket ){
                 //parse filename into object of file attributes
                 var file_object = parseFileName(file.name);
 
+                console.log('\n\n----------------------------');
+                console.log('file_object:');
+                console.dir(file_object);
+                console.log('mach:');
+                console.dir(mach);
+                
+
                 //add object of file attributes to images array
                 mach.images.addToSet( file_object );
+
+                console.log('mach.images AFTER:');
+                console.dir(mach.images);
+                console.log('----------------------------\n\n');
 
                 mach.save(function(err){
                     if(err){
