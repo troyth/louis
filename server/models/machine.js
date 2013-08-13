@@ -25,7 +25,7 @@ function parseFileName( filename, filepath ){
     if(STRING_TOKEN == null) return false;
     if(FILE_PATTERN == null) return false;
 
-    var file_array = filename.splice( STRING_TOKEN );
+    var file_array = filename.split( STRING_TOKEN );
     var file = {};
 
     file.name = filename;
