@@ -61,7 +61,17 @@ function initDelivery( _id, socket ){
                 var file_object = parseFileName(file.name);
 
                 console.log('\n\n----------------------------');
-                
+                console.log('mach.imports:');
+                console.dir(mach.imports);
+                console.log('\nfile_object:');
+                console.dir(file_object);
+                console.log('\nmach.imports[ file_object.import_name ]:');
+                console.dir(mach.imports[ file_object.import_name ]);
+
+                console.log('\n\n----------------------------\n\n');
+
+
+
                 //add object of file attributes to images array
                 mach.imports[ file_object.import_name ].images.addToSet( file_object );
                 //mach.images.addToSet( file_object );
