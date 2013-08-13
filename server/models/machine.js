@@ -97,7 +97,9 @@ exports.initialize = function( config, socket ){
 
                     var new_machine = new Machine({
                         name: config.name,
-                        password: pw
+                        password: pw,
+                        imports: config.imports,
+                        exports: config.exports
                     });
 
                     new_machine
@@ -221,6 +223,10 @@ exports.getMachineById = function(res, _id){
 exports.getImageLatest = function(res, _id){
     Machine
         .findById(_id, function(err, m){
+
+            console.log('imports:');
+            console.dir(m.imports);
+
             m.imports.forEach(function(imp){
                 if(imp.type == "timelapse" || imp.type == "photo"){
 
