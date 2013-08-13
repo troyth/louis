@@ -67,19 +67,20 @@ function initDelivery( _id, socket ){
                 console.dir(file_object);
                 console.log('\nmach.imports[ file_object.import_name ]:');
                 console.dir(mach.imports[ file_object.import_name ]);
-                console.log('\nmach.imports[ file_object.import_name ].images.length:');
-                console.dir(mach.imports[ file_object.import_name ].images.length);
 
-                console.log('\n\n----------------------------\n\n');
+                
 
 
 
                 //add object of file attributes to images array
-                if(mach.imports[ file_object.import_name ].images.length == 0){
-                    mach.imports[ file_object.import_name ].images.push( file_object );
+                if(typeof mach.imports[ file_object.import_name ].images == "undefined"){
+                    console.log('images undefined, initializing');
+                    mach.imports[ file_object.import_name ].images = [ file_object ];
                 }else{
+                    console.log('images defined, addToSet() called');
                     mach.imports[ file_object.import_name ].images.addToSet( file_object );
                 }
+                console.log('\n\n----------------------------\n\n');
 
                 mach.save(function(err){
                     if(err){
@@ -119,12 +120,6 @@ exports.initialize = function( config, socket ){
                         imports: config.imports,
                         exports: config.exports
                     });
-
-                    for(var i in new_machine.imports){
-                        if(new_machine.imports[i].type == 'photo' || new_machine.imports[i].type == 'timelapse'){
-                            new_machine.imports[i].images = [];
-                        }
-                    }
 
                     new_machine
                         .save(function(err, mach){
