@@ -160,6 +160,12 @@ exports.getMachines = function(res){
     Machine
         .find().exec(function(err, machines){
             if(err) res.send(500, err);
+
+            //remove unnecessary and sensitive properties (eg. password)
+            delete machines.__v;
+            delete machines.password;
+            delete machines.images;
+
             res.send(200, machines);
         })
 
