@@ -17,8 +17,8 @@ var FREQ = 5000;
 
 
 function parseFileName( filename, filepath ){
-    if(typeof STRING_TOKEN == "undefined") return false;
-    if(typeof FILE_PATTERN == "undefined") return false;
+    if(STRING_TOKEN == null) return false;
+    if(FILE_PATTERN == null) return false;
 
     var file_array = filename.splice( STRING_TOKEN );
     var file = {};
