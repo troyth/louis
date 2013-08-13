@@ -224,7 +224,8 @@ exports.getImageLatest = function(res, _id){
     Machine
         .findById(_id, function(err, m){
 
-            for(var imp in m.imports){
+            for(var i in m.imports){
+                var imp = m.imports[i];
                 console.log('imp: ');
                 console.dir(imp);
                 console.log('imp.type: '+ imp.type);
