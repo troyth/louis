@@ -10,7 +10,7 @@
     "ejs": "*",
     "less-middleware": "*",
     "socket.io": "*",
-    "delivery": "*",
+    "delivery-wks": "*",
     "password-generator": "*",
     "mongoose": "*"
   }
