@@ -180,7 +180,7 @@ exports.getMachines = function(res){
                 });
             });
 
-            res.send(200, machines);
+            res.send(200, list);
         })
 
 }
