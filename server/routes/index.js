@@ -13,4 +13,5 @@ exports.getMachine = function(req, res){
 
 exports.getMachineById = function(req, res){
 	console.log('getMachineById with _id: '+ req.params._id);
+	machine.getMachineById(res, req.params._id);
 }

@@ -182,7 +182,22 @@ exports.getMachines = function(res){
 
             res.send(200, list);
         })
+}
 
+/**
+*
+* getMachineById
+*
+**/
+exports.getMachineById = function(res, _id){
+
+    Machine
+        .findById(_id, function(err, mach){
+            console.log('mach');
+            console.log(mach);
+
+            res.send(200, mach);
+        });
 }
 
 
