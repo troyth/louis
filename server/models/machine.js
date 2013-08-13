@@ -224,10 +224,11 @@ exports.getImageLatest = function(res, _id){
     Machine
         .findById(_id, function(err, m){
 
-            console.log('imports:');
-            console.dir(m.imports);
-
             for(var imp in m.imports){
+                console.log('imp: ');
+                console.dir(imp);
+                console.log('imp.type: '+ imp.type);
+                console.log('\n\n')
                 if(imp.type == "timelapse" || imp.type == "photo"){
 
                     res.send(200, imp.name);
