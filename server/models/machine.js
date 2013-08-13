@@ -227,7 +227,7 @@ exports.getImageLatest = function(res, _id){
             console.log('imports:');
             console.dir(m.imports);
 
-            m.imports.forEach(function(imp){
+            for(var imp in m.imports){
                 if(imp.type == "timelapse" || imp.type == "photo"){
 
                     res.send(200, imp.name);
