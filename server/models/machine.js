@@ -17,16 +17,17 @@ var FREQ = 5000;
 
 
 function parseFileName( filename, filepath ){
-    console.log('\n\n----------------------------');
-    console.log('STRING_TOKEN: '+ STRING_TOKEN);
-    console.log('FILE_PATTERN: '+ FILE_PATTERN);
-    console.log('----------------------------\n\n');
-
     if(STRING_TOKEN == null) return false;
     if(FILE_PATTERN == null) return false;
 
     var file_array = filename.split( STRING_TOKEN );
     var file = {};
+
+    console.log('\n\n----------------------------');
+    console.log('file_array: ');
+    console.dir(file_array);
+    console.log('FILE_PATTERN.encoding: '+ FILE_PATTERN.encoding);
+    console.log('----------------------------\n\n');
 
     file.name = filename;
     file.path = IMAGE_FILEPATH;
