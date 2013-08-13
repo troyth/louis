@@ -162,11 +162,11 @@ exports.getMachines = function(res){
             if(err) res.send(500, err);
 
             //remove unnecessary and sensitive properties (eg. password)
-            machines.forEach(function(m){
-                delete m.__v;
-                delete m.password;
-                delete m.images;
-            }); 
+            
+
+            for(var m = 0; m < machines.length; m++){
+                delete machines[m].__v;
+            } 
 
             res.send(200, machines);
         })
