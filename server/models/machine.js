@@ -213,6 +213,23 @@ exports.getMachineById = function(res, _id){
         });
 }
 
+/**
+*
+* getImageLatest
+*
+**/
+exports.getImageLatest = function(res, _id){
+    Machine
+        .findById(_id, function(err, m){
+            m.imports.forEach(function(imp){
+                if(imp.type == "timelapse" || imp.type == "photo"){
+
+                    res.send(200, imp.name);
+                }
+            });
+        });
+}
+
 
 /*-----  End of API  ------*/
 

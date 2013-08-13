@@ -37,6 +37,9 @@ app.get('/users', user.list);
 app.get('/v1/machine', routes.getMachine);
 app.get('/v1/machine/:_id', routes.getMachineById);
 
+//images
+app.get('/v1/machine/:_id/image/latest', routes.getImageLatest);
+
 
 //create server
 var server = http.createServer(app).listen(app.get('port'), function(){
