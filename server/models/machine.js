@@ -74,7 +74,7 @@ exports.initialize = function( config, socket ){
                             initDelivery( mach.id, socket );
 
                             //send confirmation to machine with _id and new password
-                            socket.emit('confirm', {"id": mach.id, "freq": FREQ, "password": pw});
+                            socket.emit('confirm.success', {"id": mach.id, "freq": FREQ, "password": pw});
                         }
                     });
 
@@ -85,6 +85,8 @@ exports.initialize = function( config, socket ){
                 if(existing_machine.password !== config.password){
                     console.log('Error: password mismatch');
                     console.log('Machine sent ' + config.password + ', database pw is ' + existing_machine.password);
+
+                    socket.emit('confirm.error', 'password');
                     return false;
                 }
                 console.log('Password match successful');
@@ -92,7 +94,7 @@ exports.initialize = function( config, socket ){
                 initDelivery( existing_machine.id, socket );
 
                 //send confirmation to existing machine with the database _id
-                socket.emit('confirm', {"id": existing_machine.id, "freq": FREQ});
+                socket.emit('confirm.success', {"id": existing_machine.id, "freq": FREQ});
             }
         });
 
