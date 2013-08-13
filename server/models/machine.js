@@ -167,7 +167,8 @@ exports.getMachines = function(res){
                 delete machines[m].__v;
                 delete machines[m].password;
                 delete machines[m].images;
-                console.log(machines[m]);
+                console.log("testing");
+                console.log(machines[m].password);
             } 
 
             res.send(200, machines);
