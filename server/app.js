@@ -35,7 +35,7 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 
 app.get('/v1/machine', routes.getMachine);
-app.get('/v1/machine/:_id', routes.getMachine);
+app.get('/v1/machine/:_id', routes.getMachineById);
 
 
 //create server
