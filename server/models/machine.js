@@ -232,7 +232,7 @@ exports.getImageLatest = function(res, _id){
 
                     res.send(200, imp.name);
                 }
-            });
+            }
         });
 }
 
