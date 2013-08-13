@@ -17,6 +17,11 @@ var FREQ = 5000;
 
 
 function parseFileName( filename, filepath ){
+    console.log('\n\n----------------------------');
+    console.log('STRING_TOKEN: '+ STRING_TOKEN);
+    console.log('FILE_PATTERN: '+ FILE_PATTERN);
+    console.log('----------------------------\n\n');
+
     if(STRING_TOKEN == null) return false;
     if(FILE_PATTERN == null) return false;
 
