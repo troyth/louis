@@ -84,47 +84,53 @@ exports.initialize = function( config, socket ){
     Machine
         .findOne({ 'name': config.name })
         .exec(function(err, existing_machine){
-            //machine is not yet in database
+            
             if (err) {
-                //create machine
-                var pw = generatePassword(12, false);
+                console.log('Error: attempting to query machine from database with name: ' + config.name);
+                return false;
+            }else{
+                //machine is not yet in database
+                if(typeof existing_machine == "undefined"){
+                    //create machine
+                    var pw = generatePassword(12, false);
 
-                var new_machine = new Machine({
-                    name: config.name,
-                    password: pw
-                });
-
-                new_machine
-                    .save(function(err, mach){
-                        if(err){
-                            console.log('Error: attempted to save new machine with msg:'+ err);
-                            return false;
-                        }else{  
-                            console.log('Success: created new machine with password: ' + pw );
-                            initDelivery( mach.id, socket );
-
-                            //send confirmation to machine with _id and new password
-                            socket.emit('confirm.success', {"id": mach.id, "freq": FREQ, "password": pw});
-                        }
+                    var new_machine = new Machine({
+                        name: config.name,
+                        password: pw
                     });
 
-            }
-            //machine is already in database
-            else{
-                console.log('existing machine with _id:' + existing_machine.id);
-                if(existing_machine.password !== config.password){
-                    console.log('Error: password mismatch');
-                    console.log('Machine sent ' + config.password + ', database pw is ' + existing_machine.password);
+                    new_machine
+                        .save(function(err, mach){
+                            if(err){
+                                console.log('Error: attempted to save new machine with msg:'+ err);
+                                return false;
+                            }else{  
+                                console.log('Success: created new machine with password: ' + pw );
+                                initDelivery( mach.id, socket );
 
-                    socket.emit('confirm.error', 'password');
-                    return false;
+                                //send confirmation to machine with _id and new password
+                                socket.emit('confirm.success', {"id": mach.id, "freq": FREQ, "password": pw});
+                            }
+                        });
                 }
-                console.log('Password match successful');
+                //machine is already in database
+                else{
+                    console.log('existing machine with _id:' + existing_machine.id);
+                    if(existing_machine.password !== config.password){
+                        console.log('Error: password mismatch');
+                        console.log('Machine sent ' + config.password + ', database pw is ' + existing_machine.password);
 
-                initDelivery( existing_machine.id, socket );
+                        socket.emit('confirm.error', 'password');
+                        return false;
+                    }
+                    console.log('Password match successful');
 
-                //send confirmation to existing machine with the database _id
-                socket.emit('confirm.success', {"id": existing_machine.id, "freq": FREQ});
+                    initDelivery( existing_machine.id, socket );
+
+                    //send confirmation to existing machine with the database _id
+                    socket.emit('confirm.success', {"id": existing_machine.id, "freq": FREQ});
+                }
+                        
             }
         });
 
