@@ -1,5 +1,6 @@
 
-var url = require('url');
+var url = require('url')
+	, machine = require('../models/machine');
 
 exports.index = function(req, res){
   res.render('index', { title: 'Express' });
@@ -13,6 +14,16 @@ exports.get = function(req, res){
 	console.log('url_array: ');
 	console.dir(url_array);
 
-	console.log('url_parts: ');
-	console.dir(url_parts);
+	switch(url_array[1]){
+		case 'v1':
+			switch(url_array[2]){
+				case 'machine':
+					machine.getMachines(res);
+					break;
+			}
+			break;
+		default:
+			res.send(404, "please specify an API version number");
+			break;
+	}
 }

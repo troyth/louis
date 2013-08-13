@@ -141,3 +141,30 @@ exports.initialize = function( config, socket ){
 
     return true;
 }
+
+
+
+/*===========================
+=            API            =
+===========================*/
+
+/**
+*
+* getMachines
+*
+* Returns the list of available connected machines and their imports and exports
+*
+**/
+exports.getMachines = function(res){
+
+    Machine
+        .find().exec(function(err, machines){
+            if(err) res.send(500, err);
+            res.send(200, machines);
+        })
+
+}
+
+
+/*-----  End of API  ------*/
+
