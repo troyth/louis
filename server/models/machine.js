@@ -23,12 +23,6 @@ function parseFileName( filename, filepath ){
     var file_array = filename.split( STRING_TOKEN );
     var file = {};
 
-    console.log('\n\n----------------------------');
-    console.log('file_array: ');
-    console.dir(file_array);
-    console.log('FILE_PATTERN.encoding: '+ FILE_PATTERN.encoding);
-    console.log('----------------------------\n\n');
-
     file.name = filename;
     file.path = IMAGE_FILEPATH;
 
@@ -67,18 +61,10 @@ function initDelivery( _id, socket ){
                 var file_object = parseFileName(file.name);
 
                 console.log('\n\n----------------------------');
-                console.log('file_object:');
-                console.dir(file_object);
-                console.log('mach:');
-                console.dir(mach);
                 
-
                 //add object of file attributes to images array
-                mach.images.addToSet( file_object );
-
-                console.log('mach.images AFTER:');
-                console.dir(mach.images);
-                console.log('----------------------------\n\n');
+                mach.imports[ file_object.import_name ].images.addToSet( file_object );
+                //mach.images.addToSet( file_object );
 
                 mach.save(function(err){
                     if(err){
@@ -118,6 +104,12 @@ exports.initialize = function( config, socket ){
                         imports: config.imports,
                         exports: config.exports
                     });
+
+                    for(var i in new_machine.imports){
+                        if(new_machine.imports[i].type == 'photo' || new_machine.imports[i].type == 'timelapse'){
+                            new_machine.imports[i].images = [];
+                        }
+                    }
 
                     new_machine
                         .save(function(err, mach){
