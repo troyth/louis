@@ -18,6 +18,10 @@ exports.get = function(req, res){
 		case 'v1':
 			switch(url_array[2]){
 				case 'machine':
+					if(url_array[3]){
+						case 
+					}
+
 					machine.getMachines(res);
 					break;
 			}
@@ -26,4 +30,12 @@ exports.get = function(req, res){
 			res.send(404, "please specify an API version number");
 			break;
 	}
+}
+
+exports.getMachine = function(req, res){
+	machine.getMachines(res);
+}
+
+exports.getMachineById = function(req, res){
+	console.log('getMachineById with _id: '+ req.params._id);
 }
