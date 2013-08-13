@@ -61,7 +61,7 @@ io.sockets.on('connection', function(socket) {
           console.log('confirming handshake with machine ' + config.name );
 
           //initialize machine
-          machine.initialize( config.name, socket );
+          machine.initialize( config, socket );
 
         }else{
           console.log('confirm error');
