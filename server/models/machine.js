@@ -8,9 +8,33 @@ var Machine = require(__dirname + '/models').Machine
 //path to store image files
 var IMAGE_FILEPATH = __dirname + '/../public/images/';
 
+//token used to tokenize strings, such as filenames. Provided by machine at handshake
+var STRING_TOKEN = null;
+var FILE_PATTERN = null;
+
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines
 var FREQ = 5000;
 
+
+function parseFileName( filename, filepath ){
+    if(typeof STRING_TOKEN == "undefined") return false;
+    if(typeof FILE_PATTERN == "undefined") return false;
+
+    var file_array = filename.splice( STRING_TOKEN );
+    var file = {};
+
+    file.name = filename;
+    file.path = IMAGE_FILEPATH;
+
+    file.machine_name = file_array[FILE_PATTERN.machine_name];
+    file.type = file_array[FILE_PATTERN.type];
+    file.timestamp = file_array[FILE_PATTERN.timestamp];
+    file.offset = file_array[FILE_PATTERN.offset];
+    file.count = file_array[FILE_PATTERN.count];
+    file.encoding = file_array[FILE_PATTERN.encoding].substr(1);
+    
+    return file;
+}
 
 
 //init delivery.js for file transfer from machines
@@ -33,8 +57,11 @@ function initDelivery( _id, socket ){
 
           Machine
             .findById(_id, function(err, mach){
+                //parse filename into object of file attributes
+                var file_object = parseFileName(file.name);
 
-                mach.images.addToSet( IMAGE_FILEPATH + file.name );
+                //add object of file attributes to images array
+                mach.images.addToSet( file_object );
 
                 mach.save(function(err){
                     if(err){
@@ -50,6 +77,9 @@ function initDelivery( _id, socket ){
 }
 
 exports.initialize = function( config, socket ){
+
+    STRING_TOKEN = config.token;
+    FILE_PATTERN = config.file_pattern;
 
     Machine
         .findOne({ 'name': config.name })

@@ -17,7 +17,7 @@ var MachineSchema = new Schema({
   country: String,
   timezone: String,
   password: String,
-  images: [String],
+  images: [Schema.Types.Mixed],
   initialized: { type: Date, default: Date.now },
   last_login: { type: Date, default: Date.now }
 }, { 
