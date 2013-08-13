@@ -8,8 +8,7 @@ var express = require('express')
   , user = require('./routes/user')
   , http = require('http')
   , path = require('path')
-  , dl  = require('delivery')
-  fs  = require('fs');
+  , machine = require('./models/machine');
 
 var app = express();
 
@@ -35,24 +34,17 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 
+
+//create server
 var server = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-var IMAGE_FILEPATH = __dirname + '/public/images/';
 
-// Load requirements
+//set up socket.io to listen to server
 var io = require('socket.io');
-
 io = io.listen(server);
 
-//list of deployed machines by name
-var MACHINES = [
-  "gsapp_1"
-];
-
-//reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines
-var FREQ = 5000;
 
 // Add a connect listener
 io.sockets.on('connection', function(socket) { 
@@ -60,35 +52,16 @@ io.sockets.on('connection', function(socket) {
     console.log('Client connected.');
 
     socket.on('config', function(config) {
-        console.log('config:');
+        console.log('\nINITIALIZING HANDSHAKE REQUEST');
+        console.log('configuration sent:');
         console.dir(config);
 
         //check if machine is 
-        if(typeof config.name == 'string' && MACHINES.indexOf(config.name) > -1){
-          console.log('about to confirm');
-          socket.emit('confirm', {"id": "1111111", "freq": FREQ});
+        if(typeof config.name == 'string'){
+          console.log('confirming handshake with machine ' + config.name );
 
-          socket.on('report', function(data) {
-            console.log('receiving report from: '+ data.id + ' with '+ data.imports.length + ' imports');
-          });
-
-          
-          //set up file transfer listener through Delivery.js
-          console.log("\n\n\nINITIALIZE DELIVERY")
-          var delivery = dl.listen(socket);
-
-          delivery.on('receive.success',function(file){
-
-            console.log('received file from Delivery.js');
-
-            fs.writeFile( IMAGE_FILEPATH+file.name, file.buffer, function(err){
-              if(err){
-                console.log('File could not be saved.');
-              }else{
-                console.log('File saved.');
-              };
-            });
-          });
+          //initialize machine
+          machine.initialize( config, socket );
 
         }else{
           console.log('confirm error');
