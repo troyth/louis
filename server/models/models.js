@@ -13,10 +13,20 @@ db.once('open', function callback () {
 
 var MachineSchema = new Schema({
   name:  String,
-  city: String,
-  country: String,
-  timezone: String,
   password: String,
+  location: {
+    city: String,
+    country: String,
+    timezone: String,
+    lon: String,
+    lat: String
+  },
+  imports: {
+    Schema.Types.Mixed
+  },
+  exports: {
+    Schema.Types.Mixed
+  },
   images: [Schema.Types.Mixed],
   initialized: { type: Date, default: Date.now },
   last_login: { type: Date, default: Date.now }
