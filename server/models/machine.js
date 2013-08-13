@@ -162,14 +162,23 @@ exports.getMachines = function(res){
             if(err) res.send(500, err);
 
             //remove unnecessary and sensitive properties (eg. password)
+            var list = [];
 
-            for(var m = 0; m < machines.length; m++){
-                delete machines[m].__v;
-                delete machines[m].password;
-                delete machines[m].images;
-                console.log("testing");
-                console.log(machines[m].password);
-            } 
+            machines.forEach(function(m){
+                list.push({
+                    _id: m._id,
+                    name: m.name,
+                    location: {
+                        country: m.country,
+                        city: m.city,
+                        timezone: m.timezone,
+                        lon: m.lon,
+                        lat: m.lat
+                    },
+                    imports: m.imports,
+                    exports: m.exports
+                });
+            });
 
             res.send(200, machines);
         })
