@@ -192,11 +192,24 @@ exports.getMachines = function(res){
 exports.getMachineById = function(res, _id){
 
     Machine
-        .findById(_id, function(err, mach){
-            console.log('mach');
-            console.log(mach);
+        .findById(_id, function(err, m){
+            if(err) res.send(500, "error getting machine by id: " + err);
 
-            res.send(200, mach);
+            var return_m = {
+                _id: m._id,
+                name: m.name,
+                location: {
+                    country: m.country,
+                    city: m.city,
+                    timezone: m.timezone,
+                    lon: m.lon,
+                    lat: m.lat
+                },
+                imports: m.imports,
+                exports: m.exports
+            }
+
+            res.send(200, return_m);
         });
 }
 
