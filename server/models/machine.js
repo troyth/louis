@@ -89,8 +89,9 @@ exports.initialize = function( config, socket ){
                 console.log('Error: attempting to query machine from database with name: ' + config.name);
                 return false;
             }else{
+                console.log('existing_machine: '+ existing_machine);
                 //machine is not yet in database
-                if(typeof existing_machine == "undefined"){
+                if(existing_machine == null){
                     //create machine
                     var pw = generatePassword(12, false);
 
