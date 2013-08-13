@@ -21,9 +21,7 @@ var MachineSchema = new Schema({
     lon: String,
     lat: String
   },
-  imports: {
-    Schema.Types.Mixed
-  },
+  imports: Schema.Types.Mixed,
   exports: {
     Schema.Types.Mixed
   },
