@@ -67,14 +67,19 @@ function initDelivery( _id, socket ){
                 console.dir(file_object);
                 console.log('\nmach.imports[ file_object.import_name ]:');
                 console.dir(mach.imports[ file_object.import_name ]);
+                console.log('\nmach.imports[ file_object.import_name ].images.length:');
+                console.dir(mach.imports[ file_object.import_name ].images.length);
 
                 console.log('\n\n----------------------------\n\n');
 
 
 
                 //add object of file attributes to images array
-                mach.imports[ file_object.import_name ].images.addToSet( file_object );
-                //mach.images.addToSet( file_object );
+                if(mach.imports[ file_object.import_name ].images.length == 0){
+                    mach.imports[ file_object.import_name ].images.push( file_object );
+                }else{
+                    mach.imports[ file_object.import_name ].images.addToSet( file_object );
+                }
 
                 mach.save(function(err){
                     if(err){
