@@ -22,7 +22,7 @@ var VIDEO_ENCODINGS = ['mp4', 'h264'];
 
 //a shift register to only allow for DELIVERY_CACHE_MAX filenames to check for duplicates with recent deliveries
 var DELIVERY_CACHE = [];
-var DELIVERY_CACHE_MAX = 10;
+var DELIVERY_CACHE_MAX = 500;
 
 
 function parseFileName( filename, filepath ){
@@ -69,14 +69,18 @@ function initDelivery( _id, socket ){
 
         console.log('\n***\nreceived file from machine with _id: ' + _id + 'with filename:\n'+ file.name + '\n\n');
 
-        //check for duplicates within the last 10 deliveries
+        //check for duplicates within the last DELIVERY_CACHE_MAX deliveries
         if(DELIVERY_CACHE.indexOf( file.name ) >= 0){
             console.log('duplicate file delivery attempt');
-            DELIVERY_CACHE.shift();
+            if(DELIVERY_CACHE.length >= DELIVERY_CACHE_MAX){
+                DELIVERY_CACHE.shift();
+            }
             DELIVERY_CACHE.push( file.name );
             return false;
         }else{
-            DELIVERY_CACHE.shift();
+            if(DELIVERY_CACHE.length >= DELIVERY_CACHE_MAX){
+                DELIVERY_CACHE.shift();
+            }
             DELIVERY_CACHE.push( file.name );
         }
 
