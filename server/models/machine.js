@@ -60,7 +60,7 @@ function initDelivery( _id, socket ){
     //listener for new file recieved
     delivery.on('receive.success',function(file){
 
-        console.log('received file from machine with _id: ' + _id);
+        console.log('\n***\nreceived file from machine with _id: ' + _id + 'with filename:\n'+ file.name + '\n\n');
 
         var file_object = parseFileName(file.name);
 
