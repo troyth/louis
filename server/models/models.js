@@ -37,8 +37,6 @@ var PhotoSchema = new Schema({
   machine_id: String,
   import_name: String,
   type: String,
-  previous: String,
-  next: String,
   timestamp: String,
   series_timestamp: String,
   offset: String,

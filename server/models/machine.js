@@ -76,8 +76,6 @@ function initDelivery( _id, socket ){
                         machine_id: _id,
                         import_name: file_object.import_name,
                         type: file_object.type,
-                        previous: (file_object.type == 'timelapse' && file_object.count != '1') ? '' : null,
-                        next: (file_object.type == 'timelapse') ? '' : null,
                         timestamp: file_object.timestamp,
                         series_timestamp: file_object.series_timestamp,
                         offset: file_object.offset,
