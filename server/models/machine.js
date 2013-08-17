@@ -67,8 +67,7 @@ function initDelivery( _id, socket ){
                 console.dir(file_object);
                 console.log('\nmach.imports[ file_object.import_name ]:');
                 console.dir(mach.imports[ file_object.import_name ]);
-
-                
+                console.log('\n\n\n\nmach.imports[ file_object.import_name ].images.length: '+ mach.imports[ file_object.import_name ].images.length);
 
 
 
