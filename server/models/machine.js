@@ -98,8 +98,7 @@ function initDelivery( _id, socket ){
             });//end fs.writeFile()
 
         }//end if photo
-
-          
+    });//end delivery.on    
 }
 
 exports.initialize = function( config, socket ){
