@@ -20,6 +20,10 @@ var FREQ = 5000;
 var PHOTO_ENCODINGS = ['jpg', 'gif', 'png', 'bmp'];
 var VIDEO_ENCODINGS = ['mp4', 'h264'];
 
+//a shift register to only allow for DELIVERY_CACHE_MAX filenames to check for duplicates with recent deliveries
+var DELIVERY_CACHE = [];
+var DELIVERY_CACHE_MAX = 10;
+
 
 function parseFileName( filename, filepath ){
     if(STRING_TOKEN == null) return false;
@@ -65,9 +69,18 @@ function initDelivery( _id, socket ){
 
         console.log('\n***\nreceived file from machine with _id: ' + _id + 'with filename:\n'+ file.name + '\n\n');
 
+        //check for duplicates within the last 10 deliveries
+        if(DELIVERY_CACHE.indexOf( file.name ) >= 0){
+            console.log('duplicate file delivery attempt');
+            DELIVERY_CACHE.shift();
+            DELIVERY_CACHE.push( file.name );
+            return false;
+        }else{
+            DELIVERY_CACHE.shift();
+            DELIVERY_CACHE.push( file.name );
+        }
+
         var file_object = parseFileName(file.name);
-
-
 
         if(PHOTO_ENCODINGS.indexOf( file_object.encoding.toLowerCase() ) >= 0 ){
             //save file locally
