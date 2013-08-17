@@ -8,6 +8,7 @@ var Machine = require(__dirname + '/models').Machine
 
 //path to store image files
 var PHOTO_FILEPATH = __dirname + '/../public/photos/';
+var PHOTO_URLPATH = '/photos/';
 
 //token used to tokenize strings, such as filenames. Provided by machine at handshake
 var STRING_TOKEN = null;
@@ -43,9 +44,11 @@ function parseFileName( filename, filepath ){
         file.series_timestamp = null;
         file.offset = null;
         file.count = null;
-    }   
+    }
 
     file.encoding = file_array[FILE_PATTERN.encoding].substr(1);
+
+    file.url = PHOTO_URLPATH + filename;
     
     return file;
 }
@@ -64,6 +67,8 @@ function initDelivery( _id, socket ){
 
         var file_object = parseFileName(file.name);
 
+
+
         if(PHOTO_ENCODINGS.indexOf( file_object.encoding.toLowerCase() ) >= 0 ){
             //save file locally
             fs.writeFile( PHOTO_FILEPATH + file.name, file.buffer, function(err){
@@ -75,6 +80,9 @@ function initDelivery( _id, socket ){
                     var new_photo = new Photo({
                         machine_id: _id,
                         import_name: file_object.import_name,
+                        filename: file.name,
+                        filepath: PHOTO_FILEPATH,
+                        url: file_object.url,
                         type: file_object.type,
                         timestamp: file_object.timestamp,
                         series_timestamp: file_object.series_timestamp,
