@@ -1,4 +1,5 @@
 var Machine = require(__dirname + '/models').Machine
+    , Photo = require(__dirname + '/models').Photo
     , generatePassword = require('password-generator')
     , dl = require('delivery-wks')
     , fs = require('fs');
@@ -6,7 +7,7 @@ var Machine = require(__dirname + '/models').Machine
 
 
 //path to store image files
-var IMAGE_FILEPATH = __dirname + '/../public/images/';
+var PHOTO_FILEPATH = __dirname + '/../public/photos/';
 
 //token used to tokenize strings, such as filenames. Provided by machine at handshake
 var STRING_TOKEN = null;
@@ -14,6 +15,9 @@ var FILE_PATTERN = null;
 
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines
 var FREQ = 5000;
+
+var PHOTO_ENCODINGS = ['jpg', 'gif', 'png', 'bmp'];
+var VIDEO_ENCODINGS = ['mp4', 'h264'];
 
 
 function parseFileName( filename, filepath ){
@@ -24,13 +28,23 @@ function parseFileName( filename, filepath ){
     var file = {};
 
     file.name = filename;
-    file.path = IMAGE_FILEPATH;
+    file.path = PHOTO_FILEPATH;
 
     file.import_name = file_array[FILE_PATTERN.import_name];
     file.type = file_array[FILE_PATTERN.type];
-    file.timestamp = file_array[FILE_PATTERN.timestamp];
-    file.offset = file_array[FILE_PATTERN.offset];
-    file.count = file_array[FILE_PATTERN.count];
+    
+    if(file.type == 'timelapse'){
+        file.series_timestamp = file_array[FILE_PATTERN.timestamp];
+        file.offset = file_array[FILE_PATTERN.offset];
+        file.count = file_array[FILE_PATTERN.count];
+        file.timestamp = parseInt(file.series_timestamp) + ( parseInt(file.offset) * parseInt(file.count = file_array[FILE_PATTERN.count]) );
+    }else{
+        file.timestamp = file_array[FILE_PATTERN.timestamp];
+        file.series_timestamp = null;
+        file.offset = null;
+        file.count = null;
+    }   
+
     file.encoding = file_array[FILE_PATTERN.encoding].substr(1);
     
     return file;
@@ -46,52 +60,46 @@ function initDelivery( _id, socket ){
     //listener for new file recieved
     delivery.on('receive.success',function(file){
 
-      console.log('received file from machine with _id: ' + _id);
+        console.log('received file from machine with _id: ' + _id);
 
-      //save file locally
-      fs.writeFile( IMAGE_FILEPATH + file.name, file.buffer, function(err){
-        if(err){
-          console.log('File could not be saved, NOT writing to db');
-        }else{
-          console.log('File saved, now writing to db');
+        var file_object = parseFileName(file.name);
 
-          Machine
-            .findById(_id, function(err, mach){
-                //parse filename into object of file attributes
-                var file_object = parseFileName(file.name);
-
-                console.log('\n\n----------------------------');
-                console.log('mach.imports:');
-                console.dir(mach.imports);
-                console.log('\nfile_object:');
-                console.dir(file_object);
-                console.log('\nmach.imports[ file_object.import_name ]:');
-                console.dir(mach.imports[ file_object.import_name ]);
-                console.log('\n\n\n\nmach.imports[ file_object.import_name ].images.length: '+ mach.imports[ file_object.import_name ].images.length);
-
-
-
-                //add object of file attributes to images array
-                if(typeof mach.imports[ file_object.import_name ].images == "undefined"){
-                    console.log('images undefined, initializing');
-                    mach.imports[ file_object.import_name ].images = [ file_object ];
+        if(PHOTO_ENCODINGS.indexOf( file_object.encoding.toLowerCase() ) >= 0 ){
+            //save file locally
+            fs.writeFile( PHOTO_FILEPATH + file.name, file.buffer, function(err){
+                if(err){
+                  console.log('File could not be saved, NOT writing to db');
                 }else{
-                    console.log('images defined, addToSet() called');
-                    mach.imports[ file_object.import_name ].images.addToSet( file_object );
-                }
-                console.log('\n\n----------------------------\n\n');
+                    console.log('File saved, now writing to db');
 
-                mach.save(function(err){
-                    if(err){
-                        console.log('error: machine.js::initDelivery() attempting to update machine with new file through delivery.js: '+ err);
-                    }else{
-                        console.log('Success: updated machine with new file through delivery.js');
-                    }
-                });
-            });
-        }
-      });
-    });
+                    var new_photo = new Photo({
+                        machine_id: _id,
+                        import_name: file_object.import_name,
+                        type: file_object.type,
+                        previous: (file_object.type == 'timelapse' && file_object.count != '1') ? '' : null,
+                        next: (file_object.type == 'timelapse') ? '' : null,
+                        timestamp: file_object.timestamp,
+                        series_timestamp: file_object.series_timestamp,
+                        offset: file_object.offset,
+                        count: file_object.count,
+                        encoding: file_object.encoding
+                    });
+
+                    new_photo
+                        .save(function(err, ph){
+                            if(err){
+                                console.log('Error: attempted to save new photo with msg:'+ err);
+                                return false;
+                            }else{  
+                                console.log('Success: created new photo with _id: ' + ph._id);
+                            }
+                        });
+                }//end if/else err
+            });//end fs.writeFile()
+
+        }//end if photo
+
+          
 }
 
 exports.initialize = function( config, socket ){

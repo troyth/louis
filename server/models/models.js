@@ -31,3 +31,22 @@ var MachineSchema = new Schema({
 
 var Machine = mongoose.model('machine', MachineSchema);
 exports.Machine = Machine;
+
+
+var PhotoSchema = new Schema({
+  machine_id: String,
+  import_name: String,
+  type: String,
+  previous: String,
+  next: String,
+  timestamp: String,
+  series_timestamp: String,
+  offset: String,
+  count: String,
+  encoding: String
+}, { 
+  autoIndex: false
+});
+
+var Photo = mongoose.model('photo', PhotoSchema);
+exports.Photo = Photo;
