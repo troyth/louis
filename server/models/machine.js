@@ -41,8 +41,8 @@ function parseFileName( filename, filepath ){
     if(file.type == 'timelapse'){
         file.series_timestamp = file_array[FILE_PATTERN.timestamp];
         file.offset = file_array[FILE_PATTERN.offset];
-        file.count = file_array[FILE_PATTERN.count];
-        file.timestamp = parseInt(file.series_timestamp) + ( parseInt(file.offset) * parseInt(file.count = file_array[FILE_PATTERN.count]) );
+        file.count = parseInt( file_array[FILE_PATTERN.count] );
+        file.timestamp = parseInt(file.series_timestamp) + ( parseInt(file.offset) * file.count );
     }else{
         file.timestamp = file_array[FILE_PATTERN.timestamp];
         file.series_timestamp = null;
