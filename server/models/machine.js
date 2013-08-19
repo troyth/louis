@@ -273,7 +273,7 @@ exports.getImageLatest = function(res, _id){
 
     Photo
         .find()
-        .sort("timestamp")
+        .sort({timestamp: -1})
         .limit(1)
         .exec(function(err, items){
             res.header("Access-Control-Allow-Origin", "*");
