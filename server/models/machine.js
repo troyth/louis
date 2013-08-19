@@ -274,6 +274,7 @@ exports.getImageLatest = function(res, _id){
     Photo
         .find()
         .sort("timestamp")
+        .limit(1)
         .exec(function(err, items){
             res.send(200, items);
         });
