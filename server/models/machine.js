@@ -15,7 +15,7 @@ var STRING_TOKEN = null;
 var FILE_PATTERN = null;
 
 //reporting frequency in ms - the higher the number, the less frequent updates can be sent from machines
-var FREQ = 5000;
+var FREQ = 60000;
 
 var PHOTO_ENCODINGS = ['jpg', 'gif', 'png', 'bmp'];
 var VIDEO_ENCODINGS = ['mp4', 'h264'];
