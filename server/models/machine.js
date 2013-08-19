@@ -276,6 +276,7 @@ exports.getImageLatest = function(res, _id){
         .sort("timestamp")
         .limit(1)
         .exec(function(err, items){
+            res.header("Access-Control-Allow-Origin", "*");
             res.send(200, items);
         });
 
