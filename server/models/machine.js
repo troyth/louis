@@ -93,6 +93,7 @@ function initDelivery( _id, socket ){
                   console.log('File could not be saved, NOT writing to db');
                 }else{
                     console.log('File saved, now writing to db');
+                    console.log('\n*******FILE URL: '+ file_object.url);
 
                     var new_photo = new Photo({
                         machine_id: _id,

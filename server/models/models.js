@@ -36,6 +36,9 @@ exports.Machine = Machine;
 var PhotoSchema = new Schema({
   machine_id: String,
   import_name: String,
+  filename: String,
+  filepath: String,
+  url: String,
   type: String,
   timestamp: String,
   series_timestamp: String,
