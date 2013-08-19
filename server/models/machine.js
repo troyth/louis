@@ -269,21 +269,13 @@ exports.getMachineById = function(res, _id){
 *
 **/
 exports.getImageLatest = function(res, _id){
-    Machine
-        .findById(_id, function(err, m){
 
-            for(var i in m.imports){
-                var imp = m.imports[i];
-                console.log('imp: ');
-                console.dir(imp);
-                console.log('imp.type: '+ imp.type);
-                console.log('\n\n')
-                if(imp.type == "timelapse" || imp.type == "photo"){
-
-                    res.send(200, imp.name);
-                }
-            }
+    Photo
+        .find()
+        .exec(function(err, items){
+            res.send(200, items);
         });
+
 }
 
 

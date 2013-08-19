@@ -21,3 +21,4 @@ exports.getMachineById = function(req, res){
 exports.getImageLatest = function(req, res){
 	machine.getImageLatest(res, req.params._id);
 }
+
